@@ -13,14 +13,15 @@ module ActionView
         text_field(object_name, method, rewrite_autocomplete_option(options))
       end
 
-      def autocomplete_id_field(object_name, method, source, options ={})
+      def autocomplete_id_field(object_name, method, source, display_value, options ={})
         options["data-autocomplete"] = source
-        options[:id_element] = "#{object_name}_#{method}"
-        value = options.delete(:display_value)
+        options[:id_element] = "##{object_name}_#{method}"
 
-        text_field_tag(method, value, rewrite_autocomplete_option(options))
-        
-        hidden_field(object_name, method)
+        obj = options.delete(:object)
+
+        txt = text_field_tag("text_#{method}", display_value, rewrite_autocomplete_option(options))
+        hid = hidden_field(object_name, method, :object =>obj )
+        "#{txt} \n #{hid}".html_safe
       end
 
     end
@@ -39,10 +40,11 @@ module ActionView
 
       def autocomplete_id_field_tag(name, source, options ={})
         options["data-autocomplete"] = source
-        options[:id_element] = name
+        options[:id_element] = "##{name}"
 
-        text_field_tag("text_#{name}", nil, rewrite_autocomplete_option(options))
-        hidden_field_tag(name, nil)
+        txt = text_field_tag("text_#{name}", nil, rewrite_autocomplete_option(options))
+        hid = hidden_field_tag(name, nil)
+        "#{txt} \n #{hid}".html_safe
       end
 
     end
@@ -64,8 +66,8 @@ class ActionView::Helpers::FormBuilder #:nodoc:
   def autocomplete_field(method, source, options = {})
     @template.autocomplete_field(@object_name, method, source, objectify_options(options))
   end
-  def autocomplete_id_field(method, source, options = {})
-    @template.autocomplete_id_field(@object_name, method, source, objectify_options(options))
+  def autocomplete_id_field(method, source, display_value, options = {})
+    @template.autocomplete_id_field(@object_name, method, source, display_value, objectify_options(options))
   end
 
 end

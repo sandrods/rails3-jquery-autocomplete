@@ -18,7 +18,7 @@ module SimpleForm
 
     class AutocompleteIdInput < Base
       def input
-        @builder.autocomplete_id_field(attribute_name, options[:url], input_html_options)
+        @builder.autocomplete_id_field(attribute_name, options[:url], options[:display_value], input_html_options)
       end
 
     protected
